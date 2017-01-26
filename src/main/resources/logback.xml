@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- configuration file for LogBack (slf4J implementation)
+See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-through-the-java-loggers/ -->
+<configuration scan="true" scanPeriod="5 seconds">
+
+    <!-- To enable JMX Management -->
+    <jmxConfigurator/>
+    
+    <!-- 
+    	Property
+     -->
+     <property name="logHome"   value="/log/st-java/"/>
+     <timestamp key="bySecond"  datePattern="yyyyMMddHHmmss"/>
+
+    <!-- 
+    	Console Appender
+     -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+        <!-- "[%d{HH:mm:ss.SSS}:%p:%F:%L] %m%n" -->
+        <!-- %-5level %logger{0} - %msg%n -->
+            <pattern>[%d{HH:mm:ss.SSS}:%-5p:%c:%-5L] %m%n</pattern>
+        </encoder>
+    </appender>
+
+	<!-- 
+		File Appender - Server Log
+	 -->
+	<appender name="appenderServer" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logHome}server.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logHome}server.log.%d{yyMMdd}.%i</fileNamePattern>
+			<maxHistory>14</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%d{HH:mm:ss.SSS}:%-5p:%c{0}:%L] %m%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- 
+		File Appender - Error Log
+	 -->
+	<appender name="appenderError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logHome}error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logHome}error.log.%d{yyMMdd}.%i</fileNamePattern>
+			<maxHistory>14</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>[%d{HH:mm:ss.SSS}] %m%n</pattern>
+		</encoder>
+	</appender>
+	
+    <!-- 
+    	Batch Appender
+     -->
+    <appender name="appenderBatch" class="ch.qos.logback.classic.sift.SiftingAppender">
+    
+    	<!-- MDC Value -->
+          <discriminator>
+			<key>logFileName</key>
+			<defaultValue>batch</defaultValue>
+		  </discriminator>
+    	
+   		<sift>
+	        <!-- A standard RollingFileAppender, the log file is based on 'logFileName' at runtime  -->
+	        <appender name="${logFileName}" class="ch.qos.logback.core.FileAppender">
+	        	<file>${logHome}batch/${logFileName}.log</file>
+				<encoder>
+		            <pattern>[%d{HH:mm:ss.SSS}:%p:%L] %m%n</pattern>
+		        </encoder>
+	        </appender>
+		</sift>
+		
+    </appender>
+    
+    <!-- 
+    	SQL Appender
+     -->
+    <appender name="appenderSql" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logHome}/sql/sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logHome}rms.log.%d{yyMMdd}.%i</fileNamePattern>
+            <maxHistory>2</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>15MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{HH:mm:ss.SSS}:%p:%c:%L] %m%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="asyncAppenderSql" class="ch.qos.logback.classic.AsyncAppender" includeCallerData="true" >
+    	<appender-ref ref="appenderSql"/>
+    </appender>
+    
+    <!-- 
+    	Service Appender
+     -->
+    <appender name="appenderService" class="ch.qos.logback.classic.sift.SiftingAppender">
+    
+    	<!-- MDC Value -->
+          <discriminator>
+			<key>logServiceFileName</key>
+			<defaultValue>service</defaultValue>
+		  </discriminator>
+    	
+   		<sift>
+	        <!-- A standard RollingFileAppender, the log file is based on 'logFileName' at runtime  -->
+	        <appender name="${logServiceFileName}" class="ch.qos.logback.core.FileAppender">
+	        	<file>${logHome}service/${logServiceFileName}.log</file>
+				<encoder>
+		            <pattern>[%d{HH:mm:ss.sss}:%p:%c:%L:%thread] %m%n</pattern>
+		        </encoder>
+	        </appender>
+		</sift>
+		
+    </appender>
+    
+	<!-- 
+		3rd party
+	 -->
+	<logger name="org.springframework" level="info"/>
+    <logger name="org.apache" level="info"/>
+    <logger name="org.apache.ibatis" level="true"/>
+    <logger name="org.mybatis" level="debug" additivity="true"/>
+    <logger name="com.ancientprogramming" level="info" additivity="false"/>
+    <logger name="com.skcc.nxcusagent.config" level="debug" additivity="true"/>
+    <logger name="org.springframework.beans.factory" level="debug" additivity="false"/>
+    
+    <!-- 
+    	SQL Logging
+    <logger name="java.sql.Statement" level="trace"/>
+    <logger name="java.sql.PreparedStatement" level="trace"/>
+    <logger name="java.sql.ResultSet" level="trace"/>
+    <logger name="jdbc" level="debug"/>
+    <logger name="java.sql.ResultSet" level="trace"/>
+    <logger name="jdbc.sqltiming" level="debug"/>
+     -->
+    
+    
+    <!-- 
+    	Custom Log
+     -->
+    <logger name="com.skcc.nxcusagent.repository" level="debug" additivity="false">
+		<appender-ref ref="asyncAppenderSql"/>
+    </logger>
+	<logger name="fileError" level="error" additivity="false">
+		<appender-ref ref="appenderError"/>
+	</logger>
+	<logger name="eachBatch" level="info" additivity="false">
+		<appender-ref ref="appenderBatch"/>
+	</logger>
+	<logger name="eachService" level="debug" additivity="false">
+		<appender-ref ref="appenderService"/>
+	</logger>
+	
+    <!-- 
+    	ROOT
+     -->
+    <root level="debug">
+        <appender-ref ref="console"/>
+        <appender-ref ref="appenderServer"/>
+    </root>
+    
+</configuration>
