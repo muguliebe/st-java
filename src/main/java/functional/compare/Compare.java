@@ -25,11 +25,19 @@ public class Compare {
 	    Comparator<Person> compareAscending  = (p1, p2) -> p1.ageDifference(p2);
 	    Comparator<Person> compareDescending = compareAscending.reversed();
 	    
-	    List<Person> listAscendingAge = 
-	    		people.stream()
+	    {
+	    	List<Person> listAscendingAge = 
+	    			people.stream()
 	    			.sorted(compareDescending)
 	    			.collect(Collectors.toList())
 	    			;
-	    printPeople("test", listAscendingAge);
+//	    	printPeople("test", listAscendingAge);
+	    }
+	    
+	    {
+	    	people.stream()
+	    		.min(Person::ageDifference)
+	    		.ifPresent(youngest -> System.out.println("Youngest:" + youngest));
+	    }
 	  }
 }
