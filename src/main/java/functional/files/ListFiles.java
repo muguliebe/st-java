@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ListFiles {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -37,12 +40,12 @@ public class ListFiles {
 		
 		System.out.println("====================");
 		{
-			List<File> files =
-					Stream.of(new File(".").listFiles())
-					.flatMap(file -> file.listFiles() == null ?
-							Stream.of(file) : Stream.of(file.listFiles()))
-					.collect(Collectors.toList());
-			System.out.println("Count: " + files.size());
+//			List<File> files =
+//					Stream.of(new File(".").listFiles())
+//					.flatMap(file -> file.listFiles() == null ?
+//							Stream.of(file) : Stream.of(file.listFiles()))
+//					.collect(Collectors.toList());
+//			System.out.println("Count: " + files.size());
 					
 		}
 		
