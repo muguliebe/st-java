@@ -13,9 +13,14 @@ hs_err_pid*
 /bin/
 /target/
 
+# IDE
 .idea/
 .settings/
 *.iml
+
+# Eclipse project files
+.classpath
+.project
 
 # build
 classes/
