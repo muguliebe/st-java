@@ -9,7 +9,7 @@ See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-
     <!-- 
     	Property
      -->
-     <property name="logHome"   value="/log/st-java/"/>
+     <property name="logHome"   value="log/st-java/"/>
      <timestamp key="bySecond"  datePattern="yyyyMMddHHmmss"/>
 
     <!-- 
@@ -163,7 +163,10 @@ See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-
 	<logger name="eachService" level="debug" additivity="false">
 		<appender-ref ref="appenderService"/>
 	</logger>
-	
+	<logger name="ch.qos.logback" level="error" additivity="false">
+		<appender-ref ref="console"/>
+	</logger>
+
     <!-- 
     	ROOT
      -->
