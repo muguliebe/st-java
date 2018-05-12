@@ -26,4 +26,5 @@ public class Greeter {
 		greeter.greet(() -> log.info("greet"));
 		greeter.greet(inner);
 	}
+
 }
