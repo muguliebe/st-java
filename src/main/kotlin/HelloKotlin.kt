@@ -1,7 +1,5 @@
 package demo
 
-import model.User
-
 fun main(args: Array<String>) {
     println("hello kotlin")
 
@@ -11,8 +9,7 @@ fun main(args: Array<String>) {
     println("maxOf(1,3) = ${maxOf(1, 3)}")
 
     val fruits = listOf("banana", "avocado", "apple", "kiwi")
-    fruits
-            .forEach { i -> println(i) }
+    fruits.forEach { i -> println(i) }
 
     val customer = Customer("what")
     println("customer.id = ${customer.id}")
