@@ -24,6 +24,6 @@ public class First {
 		}
 
 	
-	static final Function<String, Predicate<String>> startWithLetter = 
+	static final Function<String, Predicate<String>> startWithLetter =
 			letter -> name -> name.startsWith(letter);
 }
